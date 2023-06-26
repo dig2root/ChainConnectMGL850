@@ -86,7 +86,7 @@ function Tool3D () {
                 hauteur: res.data[0][0].hauteur
             })
             for (const current of res.data[1]) {
-                var newBox = {
+                let newBox = {
                         x: current.x,
                         y: current.y,
                         z: current.z,
