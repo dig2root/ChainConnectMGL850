@@ -1,0 +1,30 @@
+$primary-color: #004080;
+$secondary-color: #0066CC;
+$background-color: #FFFFFF;
+$border-color: #EEEEEE;
+
+.header {
+    display: flex;
+    height: 75px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 50px;
+    background-color: $background-color;
+    border-bottom: solid 1px $border-color;
+   
+
+    .header-logo {
+        height: 35px;
+        transition-property: opacity;
+        transition: ease-in-out;
+        transition-duration: 0.2s;
+        margin-top: 5px;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 70%;
+        }
+    }
+
+}

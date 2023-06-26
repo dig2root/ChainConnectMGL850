@@ -1,0 +1,148 @@
+$primary-color: #0F4780;
+$secondary-color: #1C8EFF;
+$background-color: #FFFFFF;
+
+.tool {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    height: calc(100vh - 75px);
+    
+    .tool-box {
+        width: 50%;
+        height: 90%;
+        border-radius: 15px;
+        box-shadow: 0px 5px 20px 0px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        
+        .tool-box--title {
+            font-weight: 300;
+        }
+
+        .tool-box--container {
+            width: 80%;
+
+            .tool-box--container_title {
+                font-weight: 300;
+            }
+
+            .tool-box--container_inputs {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                width: 100%;
+
+                .tool-box--container_inputs__input {
+                    width: 25%;
+                    border-radius: 5px;
+                    border: solid 2px $primary-color;
+                }
+            }
+
+        }
+
+        .tool-box--elements {
+            width: 80%;
+
+            .tool-box--elements_title {
+                font-weight: 300;
+            }
+
+            .tool-box--elements_personnalise {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                width: 100%;
+
+                .tool-box--elements_quantity {
+                    width: 16%;
+                    border-radius: 5px;
+                    border: solid 2px $primary-color;
+                }
+
+                .tool-box--elements_add {
+                    border: 3px solid $primary-color;
+                    border-radius: 50%;
+                    color: $primary-color;
+                    background-color: $background-color;
+                    font-weight: 800;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .tool-box--list {
+            width: 80%;
+
+            .tool-box--list_title {
+                font-weight: 300;
+            }
+
+            .tool-box--list_list {
+                width: 100%;
+                border: solid 2px $primary-color;
+                border-radius: 5px;
+                overflow: auto;
+                height: 100px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+
+                .tool-box--list__list__box {
+                    list-style: none;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    font-size: 17px;
+
+                    .tool-box--list_list__remove {
+                        border: 3px solid $primary-color;
+                        width: 25px;
+                        height: 25px;
+                        padding: 0;
+                        border-radius: 50%;
+                        color: $primary-color;
+                        background-color: $background-color;
+                        font-weight: 800;
+                        margin-left: 50px;
+                        cursor: pointer;
+                    }
+                }
+            }  
+        }
+
+        .tool-box--button {
+            padding: 4px 15px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            background-color: $primary-color;
+            border: $primary-color solid 2px;
+            color: $background-color;
+
+            &:hover {
+                cursor: pointer;
+                background-color: $background-color;
+                border: $primary-color solid 2px;
+                color: $primary-color;
+            }
+        }
+    }
+
+    .tool-canvas {
+        width: 25%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .tool-canvas-canva {
+            border-radius: 15px;
+            box-shadow: 0px 5px 20px 0px rgba(0,0,0,0.3);
+            margin: auto;
+        }
+    }
+}

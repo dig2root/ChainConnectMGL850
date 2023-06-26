@@ -1,0 +1,56 @@
+$primary-color: #0F4780;
+$secondary-color: #1C8EFF;
+$background-color: #FFFFFF;
+
+.navbar {
+    width: 40%;
+
+    .navbar-list {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        font-weight: bold;
+
+        .navbar-list--item {
+            opacity: 70%;
+            color: #000;
+            font-weight: 300;
+            text-decoration: none;
+
+            &:hover {
+                cursor: pointer;
+                opacity: 100%;
+            }
+        }
+
+        .navbar-list--button {
+            padding: 5px 30px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            background-color: $primary-color;
+            border: $primary-color solid 2px;
+            color: $background-color;
+
+            &:hover {
+                cursor: pointer;
+                background-color: $background-color;
+                border: $primary-color solid 2px;
+                color: $primary-color;
+            }
+        }
+
+        .navbar-list--icon {
+            border-radius: 15px;
+            color: $primary-color;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+        
+    }
+
+}

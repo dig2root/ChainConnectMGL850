@@ -1,0 +1,122 @@
+$primary-color: #004080;
+$secondary-color: #0066CC;
+$background-color: #FFFFFF;
+
+.home {
+
+    .home-main {
+
+        .home-main--back {
+            height: calc(100vh - 75px);
+            display: flex;
+            flex-direction: row-reverse;
+
+            .home-main--back_picture {
+                height: 100%;
+            }
+
+            .home-main--back_color {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 75px);
+                background: rgb(0,64,128);
+                background: linear-gradient(125deg, rgba(0,64,128,1) 0%, rgba(0,102,204,1) 50%, rgba(255,255,255,0) 100%);
+            }
+        }
+
+        .home-main--content {
+            position: absolute;
+            top: 0%;
+            right: 5%;
+            width: 40%;
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+
+            .home-main--content_title {
+                font-size: 50px;
+                font-weight: 300;
+                text-align: center;               
+            }
+
+            .home-main--content_button {
+                background: none;
+                color: inherit;
+                font: inherit;
+                cursor: pointer;
+                padding: 10px 25px;
+                border: solid 2px $background-color;
+                border-radius: 20px;
+                background-color: $background-color;
+                color: $primary-color;
+                
+                &:hover {
+                    background: none;
+                    color: $background-color;
+                }
+            }
+        }
+    }
+
+    .home-offers {
+        height: calc(100vh - 75px);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        text-align: center;
+
+        .home-offers--title {
+            width: 100%;
+            font-weight: 300;
+        }
+
+        .home-offers--offer {
+            width: 20%;
+            height: 50%;
+            text-align: center;
+            border-radius: 15px;
+            background: rgb(0,64,128);
+            background: linear-gradient(45deg, rgba(0,64,128,1) 0%, rgba(0,102,204,1) 45%, rgba(121,156,231,1) 100%);
+            box-shadow: 0px 10px 20px -10px #000000;
+            color: $background-color;
+            font-weight: 300;
+
+            .home-offers--offer_avantages {
+                list-style: none;
+                width: 80%;
+
+                .home-offers--offer_avantages__item {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+            }
+
+            .home-offers--offer_button {
+                background: none;
+                color: inherit;
+                font: inherit;
+                cursor: pointer;
+                padding: 10px 25px;
+                border: solid 2px $background-color;
+                border-radius: 20px;
+                background-color: $background-color;
+                color: $primary-color;
+                
+                &:hover {
+                    background: none;
+                    color: $background-color;
+                }
+            }
+        }
+    }
+}
+
+    

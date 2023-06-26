@@ -1,0 +1,26 @@
+$primary-color: #004080;
+$secondary-color: #0066CC;
+$background-color: #FFFFFF;
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: $primary-color;
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    color: #FFFFFF;
+    font-weight: 300;
+
+    .footer-about {
+        width: 25%;
+        text-align: justify;
+
+        .footer-logo {
+            width: 50%;
+        }
+    }
+}
