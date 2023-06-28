@@ -3,10 +3,25 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { WagmiConfig, createConfig, configureChains, mainnet } from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public'
+ 
+const { publicClient, webSocketPublicClient } = configureChains(
+  [mainnet],
+  [publicProvider()],
+)
+ 
+const config = createConfig({
+  autoConnect: true,
+  publicClient,
+  webSocketPublicClient,
+})
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <WagmiConfig config={config}>
+      <App />
+    </WagmiConfig>
   </React.StrictMode>,
   document.getElementById('root')
 );

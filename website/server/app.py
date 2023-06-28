@@ -3,6 +3,7 @@ from flask import json
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_session import Session
+from moralis import auth
 from models import db, User
 from config import ApplicationConfig
 from utils import Utils
@@ -16,6 +17,9 @@ solver3d = Solver3D()
 app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
 
+# Moralis API key
+API_KEY=app.config.get('API_KEY')
+
 bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
 server_session = Session(app)
@@ -25,7 +29,7 @@ with app.app_context():
     db.create_all()
 
 @app.route("/@me")
-def get_current_user():
+def getCurrentUser():
     user_id = session.get("user_id")
 
     if not user_id:
@@ -41,7 +45,7 @@ def get_current_user():
     })
 
 @app.route("/register", methods=["POST"])
-def register_user():
+def registerUser():
     lastname = request.json["lastname"]
     firstname = request.json["firstname"]
     email = request.json["email"]
@@ -66,7 +70,7 @@ def register_user():
     })
 
 @app.route("/login", methods=["POST"])
-def login_user():
+def loginUser():
     email = request.json["email"]
     password = request.json["password"]
 
@@ -89,12 +93,12 @@ def login_user():
     }), 200)
 
 @app.route("/logout", methods=["POST"])
-def logout_user():
+def logoutUser():
     session.pop("user_id", None)
     return jsonify(()), 200
 
 @app.route("/application2d", methods=["POST"])
-def use_2dapp():
+def use2dApp():
     container = request.json["container"]
     boxes = request.json["boxes"]
     filled_container, container = solver2d.solve(Utils.convertBoxIntoList(boxes), Utils.convertContainerIntoList(container))
@@ -102,12 +106,50 @@ def use_2dapp():
     return jsonify(resp), 200
 
 @app.route("/application3d", methods=["POST"])
-def use_3dapp():
+def use3dApp():
     container = request.json["container"]
     boxes = request.json["boxes"]
     bin = solver3d.solve([container], boxes)
     resp = Utils.convert3DJson(bin)
     return jsonify(resp), 200
+
+@app.route('/request', methods=["GET"])
+def requestChallenge():
+    args = request.args
+    body = {
+        "domain": "my.dapp", 
+        "chainId": args.get("chainId"), 
+        "address": args.get("address"), 
+        "statement": "Please confirm login", 
+        "uri": "https://my.dapp/", 
+        "expirationTime": "2023-01-01T00:00:00.000Z", 
+        "notBefore": "2020-01-01T00:00:00.000Z", 
+        "resources": ['https://docs.moralis.io/'], 
+        "timeout": 30, 
+    }
+
+    result = auth.challenge.request_challenge_evm(
+        api_key=API_KEY,
+        body=body,
+    )
+
+    return result
+
+
+@app.route('/verify', methods=["GET"])
+def verifyChallenge():
+    args = request.args
+    body={
+        "message": args.get("message"), 
+        "signature": args.get("signature"),
+    }
+
+    result = auth.challenge.verify_challenge_evm(
+        api_key=API_KEY,
+        body=body
+    )
+
+    return result
 
 if __name__ == "__name__":
     app.run(debug=True)

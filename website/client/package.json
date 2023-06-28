@@ -23,6 +23,7 @@
     "sass": "^1.49.9",
     "styled-components": "^5.3.6",
     "three": "^0.139.2",
+    "wagmi": "^1.3.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
