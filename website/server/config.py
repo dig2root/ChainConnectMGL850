@@ -7,6 +7,7 @@ load_dotenv()
 
 class ApplicationConfig:
     SECRET_KEY = os.environ["SECRET_KEY"]
+    API_KEY = os.environ["API_KEY"]
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True

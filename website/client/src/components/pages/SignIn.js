@@ -15,7 +15,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import pageTitle from '../functions/PageTitle';
-import MetaMaskIcon from '../images/metamask_icon.png';
 
 export default function SignIn() {
 

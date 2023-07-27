@@ -18,8 +18,7 @@ app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
 
 # Moralis API key
-API_KEY=app.config.get('API_KEY')
-
+API_KEY=app.config.get("API_KEY")
 bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
 server_session = Session(app)
@@ -117,15 +116,12 @@ def use3dApp():
 def requestChallenge():
     args = request.args
     body = {
-        "domain": "my.dapp", 
+        "domain": "localhost:3000", 
         "chainId": args.get("chainId"), 
         "address": args.get("address"), 
-        "statement": "Please confirm login", 
-        "uri": "https://my.dapp/", 
-        "expirationTime": "2023-01-01T00:00:00.000Z", 
-        "notBefore": "2020-01-01T00:00:00.000Z", 
-        "resources": ['https://docs.moralis.io/'], 
-        "timeout": 30, 
+        "statement": "Please confirm", 
+        "uri": "https://localhost:3000/",
+        "timeout": 30,
     }
 
     result = auth.challenge.request_challenge_evm(
@@ -135,10 +131,10 @@ def requestChallenge():
 
     return result
 
-
 @app.route('/verify', methods=["GET"])
 def verifyChallenge():
     args = request.args
+    print(args)
     body={
         "message": args.get("message"), 
         "signature": args.get("signature"),
