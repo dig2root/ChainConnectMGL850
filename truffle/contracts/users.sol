@@ -14,6 +14,8 @@ contract Users {
     mapping(address => User) _users;    
 
     function addUser(address _user, string memory _firstname, string memory _lastname, string memory _email, uint _age) public {
+        // Add the user only if it doesn't exist
+        require(_users[_user]._address != _user, "User already exists.");
         _users[msg.sender] = User(_user, _firstname, _lastname, _email, _age);
     }
 
