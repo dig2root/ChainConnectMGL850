@@ -16,12 +16,16 @@ Le projet utilise un projet Truffle pour la création, les tests, la compilation
 
 Compilation: `$truffle compile`
 
+Tests: `$truffle test`
+
 Migration: `$truffle migrate`
 
-## Client ChainConnect (site permettant l'inscription au réseau d'authentification décentralisé)
+## Client ChainConnect (site permettant l'inscription au réseau d'authentification décentralisé ChainConnect)
 
-Le code du client est situé dans le répertoire `./chain-connect` et s'éxecute dans le terminal avec `$yarn start`.
+Le code du client est situé dans le répertoire `./chain-connect` et s'éxecute dans le terminal avec `$yarn start` en veillant à éxecuter `$yarn install` avant le premier lancement.
 
 ## Client Filltruck (site tiers utilisant l'authentification ChainConnect)
 
-Le code du client est situé dans le répertoire `./filltruck/client` et s'éxecute dans le terminal avec `$yarn start`.
+Le code du frontend est situé dans le répertoire `./filltruck/client` et s'éxecute dans le terminal avec `$yarn start` en veillant à éxecuter `$yarn install` avant le premier lancement.
+
+Le code du backend est situé dans le répertoire `./filltruck/server` et s'éxecute dans le terminal avec `$flask run` en veillant à éxecuter `$pip install -r requirements.txt` avant le premier lancement.
