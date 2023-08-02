@@ -12,15 +12,13 @@ export class Form extends React.Component {
             firstname: '',
             lastname: '',
             email: '',
-            age: ''
+            age: '',
         };
 
         this.contractAddress = configuration.networks["5777"].address;
         this.contractABI = configuration.abi;
         this.web3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
         this.contract = new this.web3.eth.Contract(this.contractABI, this.contractAddress, { gas: 300000, gasPrice: '20000000000' });
-        console.log(this.contract);
-        console.log(this.contract.options);
 
         this.handleAccountsChanged = this.handleAccountsChanged.bind(this);
         this.checkConnection = this.checkConnection.bind(this);
@@ -50,6 +48,7 @@ export class Form extends React.Component {
         let provider = window.ethereum;
         if (typeof provider !== "undefined") {
             await provider.request({ method: 'eth_requestAccounts' });
+            this.checkConnection();
         } else {
             console.log("Non-ethereum browser detected.Please install Metamask");
         }
@@ -65,14 +64,36 @@ export class Form extends React.Component {
         if (typeof provider !== "undefined") {
             let accounts = await provider.request({ method: 'eth_accounts' });
             let account = accounts[0];
-            console.log(account);
-            try {
-                //await this.contract.methods.addUser(account, this.state.firstname, this.state.lastname, this.state.email, this.state.age).send({ from: account });
-                let result = await this.contract.methods.getUser(account).call();
-                console.log(result);
-            } catch (err) {
-                console.error(err);
-            }
+            let tx = await this.contract.methods.addUser(this.state.firstname, this.state.lastname, this.state.email, this.state.age).send({ from: account });
+            console.log(tx);
+            let result = await this.contract.methods.getUser().call({ from: account });
+            console.log(result);
+        } else {
+            console.log("Non-ethereum browser detected.Please install Metamask");
+        }
+    }
+
+    handleModifySubmit = async () => {
+        let provider = window.ethereum;
+        if (typeof provider !== "undefined") {
+            let accounts = await provider.request({ method: 'eth_accounts' });
+            let account = accounts[0];
+            let tx = await this.contract.methods.modifyUser(this.state.firstname, this.state.lastname, this.state.email, this.state.age).send({ from: account });
+            console.log(tx);
+            let result = await this.contract.methods.getUser().call({ from: account });
+            console.log(result);
+        } else {
+            console.log("Non-ethereum browser detected.Please install Metamask");
+        }
+    }
+
+    handleGetUserSubmit = async () => {
+        let provider = window.ethereum;
+        if (typeof provider !== "undefined") {
+            let accounts = await provider.request({ method: 'eth_accounts' });
+            let account = accounts[0];
+            let result = await this.contract.methods.getUser().call({ from: account });
+            console.log(result);
         } else {
             console.log("Non-ethereum browser detected.Please install Metamask");
         }
@@ -109,7 +130,16 @@ export class Form extends React.Component {
                         <input type="number" id="age" value={this.state.age} onChange={this.handleChange} />
                         <br/>
                     </label>
-                    <input type="submit" value="Submit" />
+                    <input type="submit" value="Register" />
+                </form>
+                <form onSubmit={this.handleModifySubmit}>
+                    <input type="submit" value="Modify" />
+                </form>
+                <br/>
+                <br/>
+                <br/>
+                <form onSubmit={this.handleGetUserSubmit}>
+                    <input type="submit" value="Get stored data" />
                 </form>
             </div>
         );
