@@ -1,6 +1,6 @@
 # ChainConnectMGL850
 
-## Réseau Ethereum local
+## Réseau local Ethereum
 
 Le projet utilise un réseau local Ethereum mis en place à l'aide de Ganache
 (https://trufflesuite.com/ganache/).

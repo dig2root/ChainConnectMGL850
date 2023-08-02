@@ -3,26 +3,23 @@ pragma solidity ^0.8.17;
 
 contract Users {
 
+    uint public _userCount = 0;
+
     struct User {
-        address _address;
         string _firstname;
         string _lastname;
         string _email;
         uint _age;
     }
 
-    mapping(address => User) _users;    
+    mapping(address => User) public _users;
 
     function addUser(address _user, string memory _firstname, string memory _lastname, string memory _email, uint _age) public {
-        // Add the user only if it doesn't exist
-        require(_users[_user]._address != _user, "User already exists.");
-        _users[msg.sender] = User(_user, _firstname, _lastname, _email, _age);
+        _users[_user] = User(_firstname, _lastname, _email, _age);
+        _userCount++;
     }
 
-    function getUser(address _address) public view returns (User memory) {
-        // Seul l'utilisateur peut voir ses informations
-        require(_users[msg.sender]._address == msg.sender , "You are not allowed.");
-        return _users[_address];
+    function getUser(address _user) public view returns (User memory) {
+        return _users[_user];
     }
-
 }
