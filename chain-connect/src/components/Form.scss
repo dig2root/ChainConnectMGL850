@@ -66,4 +66,21 @@ $background-color: #F2F2F2;
         width: 75px;
         cursor: pointer;
     }
+
+    .metamask-button {
+        display: block;
+        width: 10%;
+        padding: 10px;
+        background-color: black;
+        color: white;
+        border: 1px solid black;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    
+        &:hover {
+            background-color: white;
+            color: black;
+        }
+    }
 }
