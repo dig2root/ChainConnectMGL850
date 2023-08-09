@@ -3,7 +3,6 @@ import { contract } from "./Contract";
 
 export const useGetUser = (account) => {
     const { state, send } = useContractFunction(contract, "getUser", {
-        signer: account,
         transactionName: 'Get user',
         gasLimitBufferPercentage: 10,
     });

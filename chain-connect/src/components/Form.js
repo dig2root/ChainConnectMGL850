@@ -2,6 +2,7 @@ import './Form.scss';
 import React, { useState } from 'react';
 import { useEthers } from '@usedapp/core'
 import { useAddUser } from './contracts/Users/useAddUser';
+//import { useGetUser } from './contracts/Users/useGetUser';
 
 export default function Form() {
 
@@ -12,21 +13,22 @@ export default function Form() {
         age: '',
     });
 
-    const { activateBrowserWallet, deactivate, account } = useEthers()
-
     const handleChange = (event) => {
         // Change the corresponding state variable to the value of the input field
         setForm({ ...form, [event.target.id]: event.target.value });
     }
 
+    const { activateBrowserWallet, deactivate, account } = useEthers()
+
     const { loading, success, error, send } = useAddUser(account);
-    
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         await send(form.firstname, form.lastname, form.email, parseInt(form.age));
         // Alert the status of the transaction
+        console.log(loading, success, error);
         if (loading) alert('Transaction is pending...');
-        if (error) alert('Transaction failed...');
+        if (error) alert('User already exists...');
         if (success) alert('User successfully added!');
     }
 
