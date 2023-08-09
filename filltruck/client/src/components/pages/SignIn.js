@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
 import axios from './../functions/Axios';
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-import { useAccount, useConnect, useSignMessage, useDisconnect } from 'wagmi';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -15,32 +13,58 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import pageTitle from '../functions/PageTitle';
+import Web3 from "web3";
+import configuration from "../../Users.json";
 
 export default function SignIn() {
 
-  const { connectAsync } = useConnect();
-  const { disconnectAsync } = useDisconnect();
-  const { isConnected } = useAccount();
-  const { signMessageAsync } = useSignMessage();
   const [ profileId, setProfileId ] = useState(null);
+  
+  const contractAddress = configuration.networks["5777"].address;
+  const contractABI = configuration.abi;
+  const web3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
+  const contract = new web3.eth.Contract(contractABI, contractAddress, { gas: 300000, gasPrice: '20000000000' });
 
-  async function login(){
-      if (isConnected) {
-          await disconnectAsync();
+  const checkConnection = () => {
+    window.ethereum.request({ method: 'eth_accounts' }).then(handleAccountsChanged).catch((err) => {
+        console.error(err);
+    });
+  }
+
+  const handleAccountsChanged = (accounts) => {
+      if (accounts.length === 0) {
+        setProfileId(null);
+      } else {
+        setProfileId(accounts[0]);
       }
-      const { account, chain } = await connectAsync({ connector: new MetaMaskConnector() });
-      const {data} = await axios.get('http://localhost:5000/request', {
-          params: { address: account, chainId: chain.id },
-      });
-      const message = data.message;
-      const signature = await signMessageAsync({ message });
-      const verification = await axios.get('http://localhost:5000/verify', {
-          params: { message: message, signature: signature },
-      });
-      setProfileId(verification?.data?.profileId)
+  }
+
+  const getProfile = async () => {
+    let provider = window.ethereum;
+    if (typeof provider !== "undefined") {
+      let accounts = await provider.request({ method: 'eth_accounts' });
+      let account = accounts[0];
+      let result = await contract.methods.getUser().call({ from: account });
+      console.log(result);
+    } else {
+      console.log("Non-ethereum browser detected. Please install Metamask");
+    }
+  }
+
+
+  const handleMetamaskSubmit = async () => {
+    let provider = window.ethereum;
+    if (typeof provider !== "undefined") {
+        await provider.request({ method: 'eth_requestAccounts' });
+        checkConnection();
+        getProfile();
+    } else {
+        console.log("Non-ethereum browser detected.Please install Metamask");
+    }
   }
 
   pageTitle("Sign In");
+  checkConnection();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -119,13 +143,20 @@ export default function SignIn() {
                 </Link>
               </Grid>
             </Grid>
-            <Grid container>
+            <br/>
+            <br/>
+            <Grid
+            container
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}>
               {profileId ?
                 <div>
                     <h3>Profile ID: {profileId}</h3>
-                    <button onClick={()=> setProfileId(null)}>Logout</button>
                 </div>:
-                <button onClick={login}>Login with MetaMask</button>
+                <button onClick={handleMetamaskSubmit}>Login with MetaMask</button>
               }
             </Grid>
           </Box>
