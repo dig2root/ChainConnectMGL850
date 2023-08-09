@@ -1,11 +1,10 @@
-import './App.css';
+import './App.scss';
 import { Form } from './components/Form';
 
 function App() {
   return (
     <div className="App">
-      <h1>Chain Connect</h1>
-      <Form />
+      <Form /> 
     </div>
   );
 }
