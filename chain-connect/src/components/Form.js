@@ -1,8 +1,10 @@
 import './Form.scss';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEthers } from '@usedapp/core'
+import { useGetUser } from './contracts/Users/useGetUser';
 import { useAddUser } from './contracts/Users/useAddUser';
-//import { useGetUser } from './contracts/Users/useGetUser';
+import { useModifyUser } from './contracts/Users/useModifyUser';
+//import { useDeleteUser } from './contracts/Users/useDeleteUser';
 
 export default function Form() {
 
@@ -20,16 +22,62 @@ export default function Form() {
 
     const { activateBrowserWallet, deactivate, account } = useEthers()
 
-    const { loading, success, error, send } = useAddUser(account);
+    const useGetUserHandler = useGetUser(account);
+    const useAddUserHandler = useAddUser();
+    const useModifyUserHandler = useModifyUser();
+    //const useDeleteUserHandler = useDeleteUser();
 
-    const handleSubmit = async (event) => {
+    const [registered, setRegistered] = useState(false);
+
+    useEffect(() => {
+        if (account) {
+            if (!registered) {
+                const result = useGetUserHandler;
+                if (result !== undefined) {
+                    const { value, error } = result;
+                    if (!error) {
+                        const data = value[0];
+                        if (data[3] === 0) {
+                            setRegistered(false);
+                        } else {
+                            setRegistered(true);
+                            setForm({
+                                firstname: data[0],
+                                lastname: data[1],
+                                email: data[2],
+                                age: data[3],
+                            });
+                        }
+                    }
+                }
+            }
+        } else {
+            setRegistered(false);
+            setForm({
+                firstname: '',
+                lastname: '',
+                email: '',
+                age: '',
+            });
+        };
+    }, [account, useGetUserHandler, registered]);
+
+    const handleAddUser = async (event) => {
         event.preventDefault();
-        await send(form.firstname, form.lastname, form.email, parseInt(form.age));
+        await useAddUserHandler.send(form.firstname, form.lastname, form.email, parseInt(form.age));
         // Alert the status of the transaction
-        console.log(loading, success, error);
-        if (loading) alert('Transaction is pending...');
-        if (error) alert('User already exists...');
-        if (success) alert('User successfully added!');
+        if (useAddUserHandler.loading) alert('Transaction is pending...');
+        if (useAddUserHandler.error) alert('User already exists...');
+        if (useAddUserHandler.success) alert('User successfully added!');
+    }
+
+    const handleModifyUser = async (event) => {
+        event.preventDefault();
+        await useModifyUserHandler.send(form.firstname, form.lastname, form.email, parseInt(form.age));
+        // Alert the status of the transaction
+        if (useModifyUserHandler.loading) alert('Transaction is pending...');
+        if (useModifyUserHandler.error) alert('User already exists...');
+        if (useModifyUserHandler.success) alert('User successfully added!');
     }
 
     return (
@@ -42,7 +90,7 @@ ________          _       ______                            __ <br/>
 / /___/ / / / /_/ / / / / / /___/ /_/ / / / / / / /  __/ /__/ /_  <br/>
 \____/_/ /_/\__,_/_/_/ /_/\____/\____/_/ /_/_/ /_/\___/\___/\__/  <br/>                                   
                 </pre>
-                <form className='form' onSubmit={handleSubmit} >
+                <form className='form'>
                     <div className='form-input'>
                         <input className='form-input--field' placeholder="Firstname" type="text" id="firstname" value={form.firstname} onChange={handleChange} />
                     </div>
@@ -55,7 +103,8 @@ ________          _       ______                            __ <br/>
                     <div className='form-input'>
                         <input className='form-input--field' placeholder="Age" type="number" id="age" value={form.age} onChange={handleChange} />
                     </div>
-                    <button className='form-button' type="submit">Register</button>
+                    {!registered && <button className='form-button' onClick={handleAddUser}>Register</button>}
+                    {registered && <button className='form-button' onClick={handleModifyUser}>Modify</button>}
                 </form>
             </div>
             <div className='metamask'>
