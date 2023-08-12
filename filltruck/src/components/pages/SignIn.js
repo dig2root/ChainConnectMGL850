@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
-import axios from './../functions/Axios';
+import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -13,72 +12,48 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import pageTitle from '../functions/PageTitle';
-import Web3 from "web3";
-import configuration from "../../Users.json";
+
+import './scss/SignIn.scss';
+import { useGetUser } from '../functions/contracts/Users/useGetUser';
+import { useEthers } from '@usedapp/core';
 
 export default function SignIn() {
 
-  const [ profileId, setProfileId ] = useState(null);
-  
-  const contractAddress = configuration.networks["5777"].address;
-  const contractABI = configuration.abi;
-  const web3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
-  const contract = new web3.eth.Contract(contractABI, contractAddress, { gas: 300000, gasPrice: '20000000000' });
+  const { activateBrowserWallet, deactivate, account } = useEthers()
 
-  const checkConnection = () => {
-    window.ethereum.request({ method: 'eth_accounts' }).then(handleAccountsChanged).catch((err) => {
-        console.error(err);
-    });
-  }
+  const useGetUserHandler = useGetUser(account);
 
-  const handleAccountsChanged = (accounts) => {
-      if (accounts.length === 0) {
-        setProfileId(null);
-      } else {
-        setProfileId(accounts[0]);
-      }
-  }
+  const [registered, setRegistered] = useState(false);
 
-  const getProfile = async () => {
-    let provider = window.ethereum;
-    if (typeof provider !== "undefined") {
-      let accounts = await provider.request({ method: 'eth_accounts' });
-      let account = accounts[0];
-      let result = await contract.methods.getUser().call({ from: account });
-      console.log(result);
+  useEffect(() => {
+    if (account) {
+        if (!registered) {
+            const result = useGetUserHandler;
+            if (result !== undefined) {
+                const { value, error } = result;
+                if (!error) {
+                    const data = value[0];
+                    if (data[0] === '') {
+                        setRegistered(false);
+                        alert ("You are not registered. Please register first on https://chainconnect.org");
+                    } else {
+                        setRegistered(true);
+                        alert ("You are registered!\nFirstname: " + data[0] + "\nLastname: " + data[1] + "\nEmail: " + data[2] + "\nAge: " + data[3]);
+                    }
+                }
+            }
+        }
     } else {
-      console.log("Non-ethereum browser detected. Please install Metamask");
-    }
-  }
-
-
-  const handleMetamaskSubmit = async () => {
-    let provider = window.ethereum;
-    if (typeof provider !== "undefined") {
-        await provider.request({ method: 'eth_requestAccounts' });
-        checkConnection();
-        getProfile();
-    } else {
-        console.log("Non-ethereum browser detected.Please install Metamask");
-    }
-  }
+        setRegistered(false);
+    };
+  }, [account, useGetUserHandler, registered]);
 
   pageTitle("Sign In");
-  checkConnection();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    try {
-        const res = await axios.post('/login', JSON.stringify(Object.fromEntries(data)), {
-            headers: { 'Content-type': 'application/json'},
-            withCredentials: true
-        });
-        console.log(res.data);
-        window.location.href = "/";
-    } catch (err) {
-        console.log(err)
-    }
+    console.log(data);
   };
 
   return (
@@ -152,12 +127,11 @@ export default function SignIn() {
               flexDirection: 'column',
               alignItems: 'center',
             }}>
-              {profileId ?
-                <div>
-                    <h3>Profile ID: {profileId}</h3>
-                </div>:
-                <button onClick={handleMetamaskSubmit}>Login with MetaMask</button>
-              }
+            <div className='metamask'>
+              {!account && <img className='metamask-image' onClick={activateBrowserWallet} alt="MetaMask Fox" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/512px-MetaMask_Fox.svg.png" />}
+              {account && <button className='metamask-button' onClick={deactivate}>Disconnect</button>}
+              <p className='metamask-address'>{account}</p>
+            </div>
             </Grid>
           </Box>
         </Box>
