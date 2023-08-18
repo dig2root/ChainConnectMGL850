@@ -37,7 +37,7 @@ export default function Form() {
                     const { value, error } = result;
                     if (!error) {
                         const data = value[0];
-                        if (data[3] === 0) {
+                        if (data[3].toString() === '0') {
                             setRegistered(false);
                         } else {
                             setRegistered(true);
